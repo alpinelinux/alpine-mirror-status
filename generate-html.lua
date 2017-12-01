@@ -6,7 +6,8 @@ local lustache = require("lustache")
 local utils = require("utils")
 
 local outdir = "_out"
-local mirrors_file = outdir.."/mirror-status.json"
+local mirrors_html = "index.html"
+local mirrors_json = "mirror-status.json"
 
 function get_branches(indexes)
 	local res = {}
@@ -149,9 +150,9 @@ function build_tables(indexes)
 	return res
 end
 
-local indexes = json.decode(utils.read_file(mirrors_file))
+local indexes = json.decode(utils.read_file(outdir.."/"..mirrors_json))
 local thead = get_branches(indexes)
 table.insert(thead, 1, "branch/release")
 local view = { lupdate = os.date("%c", indexes.date), mirrors = build_tables(indexes), thead = thead }
 local tpl = utils.read_file("index.tpl")
-utils.write_file(outdir.."/output.html", lustache:render(tpl, view))
+utils.write_file(outdir.."/"..mirrors_html, lustache:render(tpl, view))
