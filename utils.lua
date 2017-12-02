@@ -1,10 +1,6 @@
+local conf = require("config")
+
 local M = {}
-
-
-M.allowed = {
-	archs = { x86=1, x86_64=2, armhf=3, aarch64=4, ppc64le=5, s390x=6 },
-	repos = { main=1, community=2, testing=3, backports=4 }
-}
 
 function M.in_array(t, value)
 	for k,v in ipairs(t) do
@@ -25,6 +21,16 @@ function M.write_file(file, string)
 	file = assert(io.open(file, "w"))
 	file:write(string)
 	file:close()
+end
+
+----
+-- convert array to list
+function M.to_list(t)
+	local res = {}
+	for k,v in ipairs(t) do
+		res[v] = k
+	end
+	return res
 end
 
 ----
@@ -51,7 +57,7 @@ end
 ----
 -- repo sort function for kpairs
 function M.sort_repo(a,b)
-	local repos = M.allowed.repos
+	local repos = M.to_list(conf.repos)
 	if type(repos[a]) == "number" and type(repos[b]) == "number" then
 		if repos[a] < repos[b] then return true end
 	end
@@ -60,7 +66,7 @@ end
 ----
 -- arch sort function for kpairs
 function M.sort_arch(a,b)
-	local archs = M.allowed.archs
+	local archs = M.to_list(conf.archs)
 	if type(archs[a]) == "number" and type(archs[b]) == "number" then 
 		if archs[a] < archs[b] then return true end
 	end

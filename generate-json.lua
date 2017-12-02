@@ -5,20 +5,14 @@ local request = require("http.request")
 local yaml = require("yaml")
 local json = require("cjson")
 local utils = require("utils")
-
-local app_version = "v0.0.1"
-local apkindex_list = "apkindex.list"
-local mirrors_yaml = "https://git.alpinelinux.org/cgit/aports/plain/main/alpine-mirrors/mirrors.yaml"
-local master = "http://rsync.alpinelinux.org/alpine/"
-local output = "_out/mirror-status.json"
-local http_timeout = 3
+local conf = require("config")
 
 ----
 -- convert apkindex list to a table
 function get_apkindexes()
 	local res = {}
 	local qty = 0
-	for line in io.lines(apkindex_list) do
+	for line in io.lines(conf.apkindex_list) do
 		branch, repo, arch = line:match("^alpine/(.*)/(.*)/(.*)/APKINDEX.tar.gz")
 		if type(res[branch]) == "nil" then res[branch] = {} end
 		if type(res[branch][repo]) == "nil" then res[branch][repo] = {} end
@@ -62,7 +56,7 @@ end
 function get_index_status(uri)
 	local res = {}
 	local status, modified
-	local headers = request.new_from_uri(uri):go(http_timeout)
+	local headers = request.new_from_uri(uri):go(conf.http_timeout)
 	if headers then 
 		status = headers:get(":status")
 	else
@@ -77,6 +71,7 @@ end
 
 --- write results to json file on disk
 function write_json(t)
+	local output = ("%s/%s"):format(conf.outdir, conf.mirrors_json)
 	local f = assert(io.open(output, "w"))
 	local json = assert(json.encode(t))
 	f:write(json)
@@ -96,12 +91,13 @@ function check_apkindexes(mirror)
 	local branches = {}
 	local qty = 0
 	local cnt = 0
+	local allowed_archs = utils.to_list(conf.archs)
 	for branch in utils.kpairs(indexes, utils.sort_branch) do
 		local repos = {}
 		for repo in utils.kpairs(indexes[branch], utils.sort_repo) do
 			local archs = {}
 			for arch in utils.kpairs(indexes[branch][repo], utils.sort_arch) do
-				if type(utils.allowed.archs[arch]) == "number" then
+				if type(allowed_archs[arch]) == "number" then
 					local uri = ("%s/%s/%s/%s/APKINDEX.tar.gz"):format(mirror, branch, repo, arch)
 					status, modified = get_index_status(uri)
 					table.insert(archs, {name=arch, status=status, modified=modified})
@@ -119,7 +115,7 @@ end
 
 function process_mirrors()
 	local res = {}
-	local mirrors = get_mirrors(mirrors_yaml)
+	local mirrors = get_mirrors(conf.mirrors_yaml)
 	for idx,mirror in ipairs(mirrors) do
 		local start_time = os.time()
 		res[idx] = {}
@@ -133,10 +129,10 @@ function process_mirrors()
 end
 
 function process_master()
-	print(("Getting indexes from master: %s"):format(master))
+	print(("Getting indexes from master: %s"):format(conf.master_url))
 	local res = {}
-	res.url = master
-	res.branch = check_apkindexes(master)
+	res.url = conf.master_url
+	res.branch = check_apkindexes(conf.master_url)
 	return res
 end
 
@@ -145,6 +141,6 @@ write_json(
 		master = process_master(),
 		mirrors = process_mirrors(),
 		date = os.time(),
-		version = app_version
+		version = conf.version
 	}
 )
