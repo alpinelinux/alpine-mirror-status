@@ -2,7 +2,7 @@
 
 local inspect = require("inspect")
 local request = require("http.request")
-local yaml = require("yaml")
+local yaml = require("lyaml")
 local json = require("cjson")
 local utils = require("utils")
 local conf = require("config")

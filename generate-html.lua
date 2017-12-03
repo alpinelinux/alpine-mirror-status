@@ -4,7 +4,10 @@ local json = require("cjson")
 local inspect = require("inspect")
 local lustache = require("lustache")
 local utils = require("utils")
+local yaml = require("lyaml")
+local request = require("http.request")
 local conf = require("config")
+
 
 function get_branches(indexes)
 	local res = {}
@@ -121,12 +124,33 @@ function get_status(fm, fb, mirror, branch, repo, arch)
 	return res
 end
 
+
+function get_mirrors()
+	local headers, stream = assert(request.new_from_uri(conf.mirrors_yaml):go())
+	if headers:get(":status") ~= "200" then
+		error("Failed to get mirrors yaml!")
+	end
+	local y = assert(stream:get_body_as_string())
+	local mirrors = yaml.load(y)
+	for a,mirror in pairs(mirrors) do
+		mirrors[a].location = mirror.location or "Unknown"
+		mirrors[a].bandwidth = mirror.bandwidth or "Unknown"
+		for b,url in pairs(mirror.urls) do
+			local scheme = url:match("(.*)://*.")
+			mirrors[a].urls[b] = {url = url, scheme = scheme}
+		end
+	end
+	return mirrors
+end
+
 ----
 -- build the html table
-function build_tables(indexes)
+function build_status_tables(indexes)
 	local res = {}
 	local fm = flip_mirrors(indexes.mirrors)
 	local fb = flip_branches(indexes.master.branch)
+	local thead = get_branches(indexes)
+	table.insert(thead, 1, "branch/release")
 	for idx,mirror in ipairs(indexes.mirrors) do
 		local rows = {}
 		for _,ra in ipairs(get_repo_arch(indexes)) do
@@ -140,8 +164,8 @@ function build_tables(indexes)
 			table.insert(rows, { row = row })
 		end
 		res[idx] = { 
-			url = mirror.url, tbody = rows, duration = mirror.duration, 
-			count = mirror.count
+			url = mirror.url, thead = thead, tbody = rows,
+			duration = mirror.duration, count = mirror.count
 		}
 	end
 	return res
@@ -149,9 +173,10 @@ end
 
 local out_json = ("%s/%s"):format(conf.outdir, conf.mirrors_json)
 local indexes = json.decode(utils.read_file(out_json))
-local thead = get_branches(indexes)
-table.insert(thead, 1, "branch/release")
-local view = { lupdate = os.date("%c", indexes.date), mirrors = build_tables(indexes), thead = thead }
+local status = build_status_tables(indexes)
+local mirrors = get_mirrors()
+local last_update = os.date("%c", indexes.date)
+local view = { last_update = last_update, mirrors = mirrors, status = status }
 local tpl = utils.read_file("index.tpl")
 local out_html = ("%s/%s"):format(conf.outdir, conf.mirrors_html)
 utils.write_file(out_html, lustache:render(tpl, view))

@@ -35,6 +35,7 @@
 	    padding: 0em 1em 2em 1em;
 	    max-width: 1080px;
 	    padding-bottom: 1em;
+	    padding-top: 2em;
 	}
 	footer {
 	    background: #111;
@@ -71,6 +72,9 @@
 		color: #8B0000;
 		font-weight: bold;
 	}
+	.mirrors table {
+		width: 100%;
+	}
 	</style>
 </head>
 
@@ -85,7 +89,39 @@
 		</header>
 		<div id="content">
 			<div class="pure-g">
-				{{#mirrors}}
+				<div class="pure-u-1">
+					<table class="pure-table pure-table-striped">
+						<thead>
+							<tr>
+								<th>Mirror name</th>
+								<th>Service urls</th>
+								<th>Location</th>
+								<th>Bandwidth</th>
+							</tr>
+						</thead>
+						<tbody>
+							{{#mirrors}}
+							<tr>
+								<td>{{name}}</td>
+								<td>
+									{{#urls}}
+									<a href="{{url}}">{{scheme}}</a>
+									{{/urls}}
+								</td>
+								<td>
+									<span>{{location}}</span>
+								</td>
+								<td>
+									<span>{{bandwidth}}</span>
+								</td>
+							</tr>
+							{{/mirrors}}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="pure-g mirrors">
+				{{#status}}
 				<div class="pure-u-1">
 					<h3>{{url}}</h3>
 					<div class="mirror-meta">
@@ -113,9 +149,9 @@
 						</tbody>
 					</table>
 				</div>
-				{{/mirrors}}
+				{{/status}}
 			</div>
-			<div class="last-updated">Last updated: <span>{{lupdate}}</span> UTC</div>
+			<div class="last-updated">Last updated: <span>{{last_update}}</span> UTC</div>
 		</div>
 		<footer>© Copyright 2017 Alpine Linux Development Team all rights reserved</footer>
 	</div>
