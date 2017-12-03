@@ -135,6 +135,10 @@ function get_mirrors()
 	for a,mirror in pairs(mirrors) do
 		mirrors[a].location = mirror.location or "Unknown"
 		mirrors[a].bandwidth = mirror.bandwidth or "Unknown"
+		mirrors[a].num = a
+		if mirror.name:len() > 32 then
+			mirrors[a].name = ("%s..."):format(mirror.name:sub(1,32))
+		end
 		for b,url in pairs(mirror.urls) do
 			local scheme = url:match("(.*)://*.")
 			mirrors[a].urls[b] = {url = url, scheme = scheme}
@@ -164,7 +168,7 @@ function build_status_tables(indexes)
 			table.insert(rows, { row = row })
 		end
 		res[idx] = { 
-			url = mirror.url, thead = thead, tbody = rows,
+			url = mirror.url, thead = thead, tbody = rows, num = idx,
 			duration = mirror.duration, count = mirror.count
 		}
 	end

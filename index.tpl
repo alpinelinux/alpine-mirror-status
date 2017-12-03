@@ -72,7 +72,7 @@
 		color: #8B0000;
 		font-weight: bold;
 	}
-	.mirrors table {
+	.mirrors table, .status table {
 		width: 100%;
 	}
 	</style>
@@ -88,8 +88,9 @@
 			</div>
 		</header>
 		<div id="content">
-			<div class="pure-g">
+			<div class="pure-g mirrors">
 				<div class="pure-u-1">
+					<h1>Official Alpine Linux mirrors</h1>
 					<table class="pure-table pure-table-striped">
 						<thead>
 							<tr>
@@ -97,6 +98,7 @@
 								<th>Service urls</th>
 								<th>Location</th>
 								<th>Bandwidth</th>
+								<th>Status</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -114,16 +116,26 @@
 								<td>
 									<span>{{bandwidth}}</span>
 								</td>
+								<td>
+									<a href="#mirror{{num}}">Status</a>
+								</td>
 							</tr>
 							{{/mirrors}}
 						</tbody>
 					</table>
 				</div>
 			</div>
-			<div class="pure-g mirrors">
-				{{#status}}
+			<div class="pure-g status">
 				<div class="pure-u-1">
-					<h3>{{url}}</h3>
+					<h1>Status of Alpine Linux mirrors</h1>
+					<p>The status of each mirrors apkindex is checked via http
+					"Last modified" header tag which is compared with the master
+					mirror. If the apkindex is found the difference is displayed in
+					the table. If the date of the index is the same (or less than one hour)
+					the status will be displayed as OK. If an http error code is
+					returned it will be displayed in the table instead.</p>
+					{{#status}}
+					<h2 id="mirror{{num}}">{{url}}	</h2>
 					<div class="mirror-meta">
 						<ul class="mirror-meta">
 							<li>Generated in {{duration}} seconds.</li>
@@ -148,8 +160,8 @@
 							{{/tbody}}
 						</tbody>
 					</table>
+					{{/status}}
 				</div>
-				{{/status}}
 			</div>
 			<div class="last-updated">Last updated: <span>{{last_update}}</span> UTC</div>
 		</div>
