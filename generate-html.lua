@@ -1,11 +1,11 @@
 #!/usr/bin/lua5.3
 
 local json = require("cjson")
-local inspect = require("inspect")
 local lustache = require("lustache")
-local utils = require("utils")
 local yaml = require("lyaml")
 local request = require("http.request")
+
+local utils = require("utils")
 local conf = require("config")
 
 
