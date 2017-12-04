@@ -42,6 +42,7 @@ function get_mirrors(uri)
 		error("Failed to get mirrors yaml!")
 	end
 	local y = assert(stream:get_body_as_string())
+	stream:shutdown()
 	local mirrors = yaml.load(y)
 	for idx, mirror in ipairs(mirrors) do
 		for _,url in ipairs(mirror.urls) do
@@ -56,7 +57,8 @@ end
 function get_index_status(uri)
 	local res = {}
 	local status, modified
-	local headers = request.new_from_uri(uri):go(conf.http_timeout)
+	local headers, stream = request.new_from_uri(uri):go(conf.http_timeout)
+	stream:shutdown()
 	if headers then 
 		status = headers:get(":status")
 	else
