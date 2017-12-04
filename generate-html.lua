@@ -106,19 +106,21 @@ end
 
 ----
 -- get status and format it based on http status and modified time
-function get_status(fm, fb, mirror, branch, repo, arch)
+function get_status(fm, fb, date, mirror, branch, repo, arch)
 	local res = { text = "N/A", class = "status-na" }
 	if type(fm[mirror]) == "table" and
 		type(fm[mirror][branch]) == "table" and
 		type(fm[mirror][branch][repo]) == "table" and
 		type(fm[mirror][branch][repo][arch]) == "table" then
 		if type(fm[mirror][branch][repo][arch]) == "table" then
-			local status = fm[mirror][branch][repo][arch]
-			local age
-			if type(status.modified) == "number" then
-				age = fb[branch][repo][arch].modified - status.modified
+			local mirror = fm[mirror][branch][repo][arch]
+			local master = fb[branch][repo][arch]
+			local age = 0
+			if type(mirror.modified) == "number" and
+				master.modified ~= mirror.modified then
+				age = date - master.modified
 			end
-			res = format_status(status.status, age)
+			res = format_status(mirror.status, age)
 		end
 	end
 	return res
@@ -162,7 +164,7 @@ function build_status_tables(indexes)
 			local row = {}
 			table.insert(row, {text = ra})
 			for _,branch in ipairs(get_branches(indexes)) do
-				local status = get_status(fm, fb, mirror.url, branch, repo, arch)
+				local status = get_status(fm, fb, indexes.date, mirror.url, branch, repo, arch)
 				table.insert(row, status)
 			end
 			table.insert(rows, { row = row })
