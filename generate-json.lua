@@ -80,11 +80,18 @@ function write_json(t)
 	f:close()
 end
 
+--- print msg on console when debug is provided
+function msg(s)
+	if arg[1] == "debug" then print(s) end
+end
+
 --- show a process indicator on stdout
 function progress(num)
-	num = (num < 10) and "0"..num or num
-	io.write(("Indexes left: %s\r"):format(num))
-	io.flush()
+	if arg[1] == "debug" then
+		num = (num < 10) and "0"..num or num
+		io.write(("Indexes left: %s\r"):format(num))
+		io.flush()
+	end
 end
 
 -- check all apkindex for specific mirror
@@ -122,7 +129,7 @@ function process_mirrors()
 		local start_time = os.time()
 		res[idx] = {}
 		res[idx].url = mirror
-		print(("[%s/%s] Getting indexes from mirror: %s"):format(idx, 
+		msg(("[%s/%s] Getting indexes from mirror: %s"):format(idx,
 			#mirrors, mirror))
 		res[idx].branch, res[idx].count = check_apkindexes(mirror)
 		res[idx].duration = os.difftime(os.time(),start_time)
@@ -131,7 +138,7 @@ function process_mirrors()
 end
 
 function process_master()
-	print(("Getting indexes from master: %s"):format(conf.master_url))
+	msg(("Getting indexes from master: %s"):format(conf.master_url))
 	local res = {}
 	res.url = conf.master_url
 	res.branch = check_apkindexes(conf.master_url)
