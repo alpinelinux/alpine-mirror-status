@@ -58,7 +58,7 @@ function get_index_status(uri)
 	local res = {}
 	local status, modified
 	local headers, stream = request.new_from_uri(uri):go(conf.http_timeout)
-	if stream then stream:shutdown() end
+	if type(stream) == "table" then stream:shutdown() end
 	if headers then 
 		status = headers:get(":status")
 	else
