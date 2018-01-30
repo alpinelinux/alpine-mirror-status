@@ -73,7 +73,7 @@ end
 
 --- write results to json file on disk
 function write_json(t)
-	local output = ("%s/%s"):format(conf.outdir, conf.mirrors_json)
+	local output = ("%s/%s"):format(conf.outdir, conf.status_json)
 	local f = assert(io.open(output, "w"))
 	local json = assert(json.encode(t))
 	f:write(json)

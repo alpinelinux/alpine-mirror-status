@@ -177,7 +177,7 @@ function build_status_tables(indexes)
 	return res
 end
 
-local out_json = ("%s/%s"):format(conf.outdir, conf.mirrors_json)
+local out_json = ("%s/%s"):format(conf.outdir, conf.status_json)
 local indexes = json.decode(utils.read_file(out_json))
 local status = build_status_tables(indexes)
 local mirrors = get_mirrors()
