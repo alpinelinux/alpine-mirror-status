@@ -3,7 +3,6 @@
 local json = require("cjson")
 local lustache = require("lustache")
 local yaml = require("lyaml")
-local request = require("http.request")
 
 local utils = require("utils")
 local conf = require("config")
@@ -128,12 +127,7 @@ end
 
 
 function get_mirrors()
-	local headers, stream = assert(request.new_from_uri(conf.mirrors_yaml):go())
-	if headers:get(":status") ~= "200" then
-		error("Failed to get mirrors yaml!")
-	end
-	local y = assert(stream:get_body_as_string())
-	local mirrors = yaml.load(y)
+	local mirrors = yaml.load(utils.read_file(conf.mirrors_yaml))
 	for a,mirror in pairs(mirrors) do
 		mirrors[a].location = mirror.location or "Unknown"
 		mirrors[a].bandwidth = mirror.bandwidth or "Unknown"

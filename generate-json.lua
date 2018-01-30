@@ -34,15 +34,9 @@ function rfc2616_date_to_ts(s)
 end
 
 ----
--- get a list of http urls from mirrors yaml
-function get_mirrors(uri)
+-- get a list of http urls from private yaml from mirrors repo
+function get_mirrors(y)
 	local res = {}
-	local headers, stream = assert(request.new_from_uri(uri):go())
-	if headers:get(":status") ~= "200" then
-		error("Failed to get mirrors yaml!")
-	end
-	local y = assert(stream:get_body_as_string())
-	stream:shutdown()
 	local mirrors = yaml.load(y)
 	for idx, mirror in ipairs(mirrors) do
 		for _,url in ipairs(mirror.urls) do
@@ -124,7 +118,8 @@ end
 
 function process_mirrors()
 	local res = {}
-	local mirrors = get_mirrors(conf.mirrors_yaml)
+	local mirrors = get_mirrors(utils.read_file(conf.mirrors_yaml))
+	--local mirrors = json.decode(utils.read_file(conf.mirrors_json))
 	for idx,mirror in ipairs(mirrors) do
 		local start_time = os.time()
 		res[idx] = {}

@@ -2,7 +2,8 @@ local conf = {}
 
 conf.version = "v0.0.1"
 conf.apkindex_list = "apkindex.list"
-conf.mirrors_yaml = "https://git.alpinelinux.org/cgit/aports/plain/main/alpine-mirrors/mirrors.yaml"
+-- private.yaml is taken from alpine mirrors repo
+conf.mirrors_yaml = "/path/to/private.yaml"
 conf.master_url = "http://rsync.alpinelinux.org/alpine/"
 conf.outdir = "_out"
 conf.mirrors_html = "index.html"
