@@ -128,11 +128,11 @@
 			<div class="pure-g status">
 				<div class="pure-u-1">
 					<h1>Status of Alpine Linux mirrors</h1>
-					<p>The status of each mirrors apkindex is checked via http
-					"Last modified" header tag which is compared with the master
-					mirror. If the apkindex is found the difference is displayed in
+					<p>The status of each mirror’s APKINDEX is checked via HTTP
+					“Last modified” header tag which is compared with the master
+					mirror. If the APKINDEX is found, the difference is displayed in
 					the table. If the date of the index is the same (or less than one hour)
-					the status will be displayed as OK. If an http error code is
+					the status will be displayed as OK. If an HTTP error code is
 					returned it will be displayed in the table instead.</p>
 					{{#status}}
 					<h2 id="mirror{{num}}">{{url}}	</h2>
