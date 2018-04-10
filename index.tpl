@@ -127,6 +127,10 @@
 			</div>
 			<div class="pure-g status">
 				<div class="pure-u-1">
+					<h1>Adding mirrors</h1>
+					<p>If you are a mirror operator and would like to include
+					your mirror on our list, please send us an email to:
+					<a href="mailto:alpine-mirrors@alpinelinux.org">alpine-mirrors</a></p>
 					<h1>Status of Alpine Linux mirrors</h1>
 					<p>The status of each mirror’s APKINDEX is checked via HTTP
 					“Last modified” header tag which is compared with the master
