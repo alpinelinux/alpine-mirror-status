@@ -6,6 +6,7 @@ local json = require("cjson")
 
 local utils = require("utils")
 local conf = require("config")
+local cqueues = require("cqueues")
 
 ----
 -- convert apkindex list to a table
@@ -120,15 +121,19 @@ function process_mirrors()
 	local res = {}
 	local mirrors = get_mirrors(utils.read_file(conf.mirrors_yaml))
 	--local mirrors = json.decode(utils.read_file(conf.mirrors_json))
+	local loop = cqueues.new()
 	for idx,mirror in ipairs(mirrors) do
-		local start_time = os.time()
-		res[idx] = {}
-		res[idx].url = mirror
-		msg(("[%s/%s] Getting indexes from mirror: %s"):format(idx,
-			#mirrors, mirror))
-		res[idx].branch, res[idx].count = check_apkindexes(mirror)
-		res[idx].duration = os.difftime(os.time(),start_time)
+		loop:wrap(function()
+			local start_time = os.time()
+			res[idx] = {}
+			res[idx].url = mirror
+			msg(("[%s/%s] Getting indexes from mirror: %s"):format(idx,
+				#mirrors, mirror))
+			res[idx].branch, res[idx].count = check_apkindexes(mirror)
+			res[idx].duration = os.difftime(os.time(),start_time)
+		end)
 	end
+	loop:loop()
 	return res
 end
 
