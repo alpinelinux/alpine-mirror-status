@@ -8,6 +8,8 @@ local utils = require("utils")
 local conf = require("config")
 local cqueues = require("cqueues")
 
+local total_indexes = 0
+
 ----
 -- convert apkindex list to a table
 function get_apkindexes()
@@ -84,7 +86,7 @@ end
 function progress(num)
 	if arg[1] == "debug" then
 		num = (num < 10) and "0"..num or num
-		io.write(("Indexes left: %s\r"):format(num))
+		io.write(("Indexes left: %s \r"):format(num))
 		io.flush()
 	end
 end
@@ -96,6 +98,7 @@ function check_apkindexes(mirror)
 	local qty = 0
 	local cnt = 0
 	local allowed_archs = utils.to_list(conf.archs)
+	total_indexes = total_indexes + num_indexes
 	for branch in utils.kpairs(indexes, utils.sort_branch) do
 		local repos = {}
 		for repo in utils.kpairs(indexes[branch], utils.sort_repo) do
@@ -108,7 +111,8 @@ function check_apkindexes(mirror)
 					if status == "200" then qty = qty+1 end
 				end
 				cnt = cnt + 1
-				progress(num_indexes-cnt)
+				total_indexes = total_indexes - 1
+				progress(total_indexes)
 			end
 			table.insert(repos, {name=repo, arch=archs})
 		end
