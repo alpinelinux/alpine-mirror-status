@@ -108,3 +108,15 @@ alpine/v3.9/main/ppc64le/APKINDEX.tar.gz
 alpine/v3.9/main/s390x/APKINDEX.tar.gz
 alpine/v3.9/main/x86/APKINDEX.tar.gz
 alpine/v3.9/main/x86_64/APKINDEX.tar.gz
+alpine/v3.10/community/aarch64/APKINDEX.tar.gz
+alpine/v3.10/community/armhf/APKINDEX.tar.gz
+alpine/v3.10/community/ppc64le/APKINDEX.tar.gz
+alpine/v3.10/community/s390x/APKINDEX.tar.gz
+alpine/v3.10/community/x86/APKINDEX.tar.gz
+alpine/v3.10/community/x86_64/APKINDEX.tar.gz
+alpine/v3.10/main/aarch64/APKINDEX.tar.gz
+alpine/v3.10/main/armhf/APKINDEX.tar.gz
+alpine/v3.10/main/ppc64le/APKINDEX.tar.gz
+alpine/v3.10/main/s390x/APKINDEX.tar.gz
+alpine/v3.10/main/x86/APKINDEX.tar.gz
+alpine/v3.10/main/x86_64/APKINDEX.tar.gz
