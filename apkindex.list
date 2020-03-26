@@ -12,7 +12,6 @@ alpine/edge/main/armv7/APKINDEX.tar.gz
 alpine/edge/main/mips64/APKINDEX.tar.gz
 alpine/edge/main/ppc64le/APKINDEX.tar.gz
 alpine/edge/main/s390x/APKINDEX.tar.gz
-alpine/edge/main/tests/APKINDEX.tar.gz
 alpine/edge/main/x86/APKINDEX.tar.gz
 alpine/edge/main/x86_64/APKINDEX.tar.gz
 alpine/edge/testing/aarch64/APKINDEX.tar.gz
@@ -48,7 +47,6 @@ alpine/v3.2/main/x86_64/APKINDEX.tar.gz
 alpine/v3.3/community/armhf/APKINDEX.tar.gz
 alpine/v3.3/community/x86/APKINDEX.tar.gz
 alpine/v3.3/community/x86_64/APKINDEX.tar.gz
-alpine/v3.3/main/armhf/.~tmp~/APKINDEX.tar.gz
 alpine/v3.3/main/armhf/APKINDEX.tar.gz
 alpine/v3.3/main/x86/APKINDEX.tar.gz
 alpine/v3.3/main/x86_64/APKINDEX.tar.gz
