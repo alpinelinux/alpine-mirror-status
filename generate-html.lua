@@ -116,6 +116,7 @@ function get_status(fm, fb, date, mirror, branch, repo, arch)
 			local master = fb[branch][repo][arch]
 			local age = 0
 			if type(mirror.modified) == "number" and
+				type(master.modified) == "number" and
 				master.modified ~= mirror.modified then
 				age = master.modified - mirror.modified
 			end
