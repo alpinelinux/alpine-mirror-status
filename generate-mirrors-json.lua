@@ -23,12 +23,22 @@ local txt = {}
 for k,m in ipairs(mirrors) do
 	res[k] = {}
 	for _,pk in ipairs(public_keys) do
+		http_url = nil
+		https_url = nil
 		res[k][pk] = m[pk]
 		if pk == "urls" then
 			for _,url in pairs(m.urls) do
 				if url:find("http://") then
-					table.insert(txt, url)
+					http_url = url
 				end
+				if url:find("https://") then
+					https_url = url
+				end
+			end
+			if https_url ~= nil then
+				table.insert(txt, https_url)
+			elseif http_url ~= nil then
+				table.insert(txt, http_url)
 			end
 		end
 	end
