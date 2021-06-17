@@ -2,6 +2,7 @@ alpine/edge/community/aarch64/APKINDEX.tar.gz
 alpine/edge/community/all/APKINDEX.tar.gz
 alpine/edge/community/armhf/APKINDEX.tar.gz
 alpine/edge/community/armv7/APKINDEX.tar.gz
+alpine/edge/community/mips64/APKINDEX.tar.gz
 alpine/edge/community/ppc64le/APKINDEX.tar.gz
 alpine/edge/community/s390x/APKINDEX.tar.gz
 alpine/edge/community/x86/APKINDEX.tar.gz
