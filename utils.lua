@@ -49,9 +49,14 @@ end
 ----
 -- branch sort function for kpairs
 function M.sort_branch(a,b)
-	if a == "edge" then a = "z" end
-	if b == "edge" then b = "z" end
-	if a < b then return true end
+	if b == 'edge' then return true end
+	if a == 'edge' then return false end
+	local major_a, minor_a = a:match("(%d+)%.(%d+)")
+	local major_b, minor_b = b:match("(%d+)%.(%d+)")
+	if tonumber(major_a) < tonumber(major_b) then return true end
+	if major_a == major_b then
+		if tonumber(minor_a) < tonumber(minor_b) then return true end
+	end
 end
 
 ----
