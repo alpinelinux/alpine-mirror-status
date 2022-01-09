@@ -11,12 +11,50 @@ local cqueues = require("cqueues")
 local total_indexes = 0
 
 ----
+-- Lookup what releases there are from alpinelinux.org/releases.json
+function get_repositories()
+	local headers, stream = assert(request.new_from_uri(conf.releases_url):go(conf.http_timeout))
+	local body = assert(stream:get_body_as_string())
+	if headers:get ":status" ~= "200" then
+		error(body)
+	end
+
+	local releases = json.decode(body)
+	local repositories = {}
+	for n, release in ipairs(releases["release_branches"]) do
+		if n > conf.amount_of_releases then break end
+		local rel = release["rel_branch"]
+		local repos = {}
+		if type(release["repos"]) == "nil" then
+			repos = {{ name = "main"}}
+		else
+			repos = release["repos"]
+		end
+		for _, repo in ipairs(repos) do
+			repo_name = repo["name"]
+			for _, arch in ipairs(release["arches"]) do
+				table.insert(repositories, {
+					branch = rel,
+					repo = repo_name,
+					arch = arch
+				})
+			end
+		end
+	end
+	return repositories
+end
+
+----
 -- convert apkindex list to a table
 function get_apkindexes()
 	local res = {}
 	local qty = 0
-	for line in io.lines(conf.apkindex_list) do
-		branch, repo, arch = line:match("^alpine/(.*)/(.*)/(.*)/APKINDEX.tar.gz")
+	repositories = get_repositories()
+
+	for n, repository in ipairs(repositories) do
+		branch = repository["branch"]
+		repo = repository["repo"]
+		arch = repository["arch"]
 		if type(res[branch]) == "nil" then res[branch] = {} end
 		if type(res[branch][repo]) == "nil" then res[branch][repo] = {} end
 		res[branch][repo][arch] = 1
