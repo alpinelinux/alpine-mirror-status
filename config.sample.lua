@@ -1,7 +1,8 @@
 local conf = {}
 
 conf.version = "v0.0.1"
-conf.apkindex_list = "apkindex.list"
+conf.releases_url = "https://alpinelinux.org/releases.json"
+conf.amount_of_releases = 12
 -- private.yaml is taken from alpine mirrors repo
 conf.mirrors_yaml = "/path/to/private.yaml"
 conf.master_url = "http://rsync.alpinelinux.org/alpine/"
